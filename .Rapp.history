@@ -1,0 +1,250 @@
+l[3][2]
+l[3]
+l[[3]]
+l[[3],2]
+l[[3,2]]
+l[[3]][2]
+l[[3]][3]
+l[[3]][4]
+class(l)
+matrix(5,3)
+matrix(nrow=5,ncol=3)
+matrix(1:15,nrow=5,ncol=3)
+matrix(1:15,nrow=5,ncol=3)[5,3]
+matrix(1:15,nrow=5,ncol=3)[4,2]
+x = factor(c("A","B","A","D"))
+x
+x = factor(c("A","B","A","D","A"))
+levels(x)
+unclass(x)
+table(x)
+x
+ls
+ls()
+l
+x
+y = 1/0
+y
+y = 0/0
+y
+y=-1/0
+y
+y=-.000000001/0
+y
+y <- -.000000001/0
+y
+y <- -.000000001/0; y
+y <- -.000000001/1; y
+y <- -1/0; y
+y <- -1/0.01; y
+y <- -1/0.1; y
+y <- -1/0.2; y
+y <- -1/0.3; y
+y <- -1/0.4; y
+y <- -1/0.5; y
+y <- -1/0.6; y
+y <- -1/0.7; y
+y <- -1/0.8; y
+y <- -1/0.9; y
+y <- -1/1.0; y
+log(100023)
+log(10023)
+log(1023)
+log(102)
+log(10)
+log(1)
+data.frame(foo=1:4,bar=c(T,T,F,T))
+y = data.frame(foo=1:4,bar=c(T,T,F,T))
+dput(y)
+x <- list(foo=1:4, bar=0.6)
+x
+x[1]
+x[2]
+x['foo']
+x['bar']
+x[[1]]
+x[1]
+x[['foo']]
+x[['foo']][4]
+x[['foo']][2:3]
+x$foo
+x$bar
+x$bar[1]
+x$bar[1]
+x$bar
+x
+x$foo
+x$foo[2:3]
+x[[c(1,2)]]
+x
+x[[c(1,2:3)]]
+x[c(1,2)]
+x[c(2,1)]
+x[[c(2,1)]]
+x[[c(1,1)]]
+x <- c(1,3,5); y <- c(3,2,10)
+x
+y
+rbind(x,y)
+x <- list(2, "a", "b", TRUE)
+x[2]
+x[[2]]
+x <-1:4
+y <-2:3
+x+y
+x
+y
+x <- c(17, 14, 4, 5, 13, 12, 10)
+x[x >= 11] <- 4
+x
+hw1 = read.csv("hw1_data.csv")
+hw1
+hw1.names
+hw1.name()
+hw1
+name(hw1)
+names(hw1)
+hw1[1:2]
+hw1[,1:2]
+hw1[1:2,]
+length(hw1)
+length(hw1,1)
+length(hw1)
+rows(hw1)
+nrows(hw1)
+attributes(hw1)
+hw1.nrows
+hw1.nrows()
+hw1[]
+hw1[]
+hw1
+hw1[152:153,]
+hw1[47,"Ozone"]
+hw1[,"Ozone"]
+is.na(hw1[,"Ozone"])
+count(is.na(hw1[,"Ozone"]))
+is.na(hw1[,"Ozone"])
+is.na(hw1[,"Ozone"]).sum()
+is.na(hw1[,"Ozone"])
+hw1[,"Ozone"]
+sum(!is.na(hw1[,"Ozone"]))
+sum(is.na(hw1[,"Ozone"]))
+116+37
+mean(hw1[,"Ozone"])
+mean(hw1[,"Ozone"])
+mean(c(5,3,2))
+hw1[!is.na(hw1[,"Ozone"])]
+hw1[!is.na(hw1[,"Ozone"])]
+hw1[is.na(hw1[,"Ozone"])]
+hw1[is.na(hw1[,"Ozone"]),"Ozone"]
+hw1[!is.na(hw1[,"Ozone"]),"Ozone"]
+mean(hw1[!is.na(hw1[,"Ozone"]),"Ozone"])
+hw1[!is.na(hw1[,"Ozone"]),]
+hw1[!is.na(hw1[,"Ozone"]),1]
+hw1[!is.na(hw1[,"Ozone"]),2]
+hw1
+hw1[!is.na(hw1[,"Ozone"])]
+hw1[!is.na(hw1[,"Ozone"]),]
+mean(hw1[,'Ozone'], na.rm=T)
+hw1[complete.cases(hw1),]
+sum(hw1[complete.cases(hw1),])
+count(hw1[complete.cases(hw1),])
+hw1[complete.cases(hw1),]
+hw1[complete.cases(),]
+hw1[complete.cases(hw1[,"Ozone"]),]
+mean(hw1[complete.cases(hw1[,"Ozone"]),], 1)
+mean(hw1[complete.cases(hw1[,"Ozone"]),])
+(hw1[complete.cases(hw1[,"Ozone"]),])
+(hw1[complete.cases(hw1[,"Ozone"]),1])
+mean(hw1[complete.cases(hw1[,"Ozone"]),1])
+mean(hw1[complete.cases(hw1),1])
+hw1[1,"Ozone"]
+hw1[,"Ozone"]
+hw1[,"Ozone"]>31
+hw1[,"Temp"]>90
+hw1[,"Temp"]>90 && hw1[,"Ozone"]>31
+hw1[,"Temp"]>90 & hw1[,"Ozone"]>31
+hw1[,"Temp"]>90 & hw1[,"Ozone"]>31
+hw1[,"Temp"]>90
+hw1[,"Ozone"]>31
+hw1[,"Ozone"]
+hw1[,"Temp"]>90
+hw1[,"Ozone"]>31
+hw1[,"Temp"]>90 & hw1[,"Ozone"]>31
+hw1(hw1[,"Temp"]>90 & hw1[,"Ozone"]>31, "Solar.R")
+hw1[hw1[,"Temp"]>90 & hw1[,"Ozone"]>31, "Solar.R"]
+hw1[!is.na(hw1[,"Ozone"]) & hw1[,"Temp"]>90 & hw1[,"Ozone"]>31, "Solar.R"]
+mean(hw1[!is.na(hw1[,"Ozone"]) & hw1[,"Temp"]>90 & hw1[,"Ozone"]>31, "Solar.R"])
+mean(hw1[,"Temp"])
+mean(hw1[hw1[,"Month"]=6,"Temp"])
+mean(hw1[hw1[,"Month"]==6,"Temp"])
+hw2 = hw1[complete.cases(hw1[,"Ozone"])]
+hw2 = hw1[complete.cases(hw1[,"Ozone"]),]
+hw2
+mean(hw1[hw1[,"Month"]==6,"Temp"])
+mean(hw2[hw2[,"Month"]==6,"Temp"])
+hw2 = hw1[complete.cases(hw1),]
+mean(hw2[hw2[,"Month"]==6,"Temp"])
+mean(hw1[hw1[,"Month"]==5,"Ozone"])
+(hw1[hw1[,"Month"]==5,"Ozone"])
+max(hw1[hw1[,"Month"]==5,"Ozone"])
+hw2 = hw1[complete.cases(hw1[,"Ozone"]),]
+max(hw2[hw2[,"Month"]==5,"Ozone"])
+mean(hw2[hw2[,"Month"]==5,"Ozone"])
+mean(hw2[hw2[,"Month"]==6,"Temp"])
+x <- c(4,T)
+class(x)
+hw2
+hw2[153]
+hw2[153,]
+hw2
+hw2[-1,]
+hw2[1,]
+hw2[0,]
+hw2[length,]
+hw2[length-1,]
+hw2[130,]
+hw2[,]
+hw2[10,]
+hw2[100,]
+hw2[110,]
+hw2[120,]
+hw2[115,]
+hw2[116,]
+x <-4
+class(x)
+x <- c(4, TRUE)
+class(x)
+x <- c(1,3,5); y <- c(3,2,10)
+x
+y
+cbind(x,y)
+x<-1:4;y<-2:3
+x
+y
+x+y
+x <- c(17, 14, 4, 5, 13, 12, 10)
+x[x>10]
+x[x>10] <- 4
+x
+clear()
+clean()
+rm()
+read.csv("hw1_data.csv")
+hw1.names()
+names(hw1)
+hw1[1:2,]
+hw1
+hw1[47,"Ozone"]
+sum(is.na(hw1[,"Ozone"]))
+hw1[!is.na(hw1[,"Ozone"])]
+hw1[!is.na(hw1[,"Ozone"]),]
+hw1[!is.na(hw1[,"Ozone"]),]
+hw1[!is.na(hw1[,"Ozone"]),"Ozone"]
+mean(hw1[!is.na(hw1[,"Ozone"]),"Ozone"])
+mean(hw1[ hw1[,"Ozone"]>31 & hw1[,"Temp"]>90,"Solar.R"])
+mean(hw1[ !is.na(hw1[,"Ozone"]) & hw1[,"Ozone"]>31 & hw1[,"Temp"]>90,"Solar.R"])
+mean(hw1[hw1[,"Month"]==6,"Temp"])
+max(hw1[hw1[,"Month"]==5,"Ozone"])
+max(!is.na(hw1[,"Ozone"]) & hw1[hw1[,"Month"]==5,"Ozone"])
+max(hw1[!is.na(hw1[,"Ozone"]) & hw1[,"Month"]==5,"Ozone"])
