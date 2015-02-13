@@ -1,0 +1,11 @@
+sample.interval=20000
+"na.omit" ".External2" "model.frame.default" "<Anonymous>" "eval" "eval" "lm" "system.time" 
+"[.data.frame" "[" "na.omit.data.frame" "na.omit" ".External2" "model.frame.default" "<Anonymous>" "eval" "eval" "lm" "system.time" 
+"[.data.frame" "[" "na.omit.data.frame" "na.omit" ".External2" "model.frame.default" "<Anonymous>" "eval" "eval" "lm" "system.time" 
+"anyDuplicated.default" "anyDuplicated" "[.data.frame" "[" "na.omit.data.frame" "na.omit" ".External2" "model.frame.default" "<Anonymous>" "eval" "eval" "lm" "system.time" 
+"as.character" "model.response" "lm" "system.time" 
+".External2" "model.matrix.default" "model.matrix" "lm" "system.time" 
+".External2" "model.matrix.default" "model.matrix" "lm" "system.time" 
+".External2" "model.matrix.default" "model.matrix" "lm" "system.time" 
+".Call" "lm.fit" "lm" "system.time" 
+"rep.int" "lm.fit" "lm" "system.time" 
