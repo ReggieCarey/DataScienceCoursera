@@ -1,0 +1,211 @@
+---
+title: "Classroom Notes, Week 2 - Exploratory Data Analysis"
+author: "Reginald Carey"
+date: "March 6, 2015"
+output:
+  html_document: default
+---
+
+Lattice Plotting System
+
+xyplot
+
+bwplot
+
+histogram
+
+stripplot
+
+dotplot
+
+splom
+
+levelplot, contourplot
+
+Lattice functions generally take a function as the first parameter
+
+```
+xyplot(y ~ x | f * g, data)
+```
+
+on the left of the ~ is the y-axis, on the right is the x-axis
+
+f and g are optional conditioning variables, the * indicates an interaction bewteen two variables.
+
+data is a frame or list.  If no data frame is passed, then the parent frame is used.
+
+# Simple Lattice Plot
+
+```{r,cache=TRUE}
+library(datasets)
+library(lattice)
+## Convert 'month' to a factor variable
+airquality <- transform(airquality, Month = factor(Month))
+xyplot(Ozone ~ Wind | Month, data = airquality, layout = c(5, 1))
+```
+
+Lattice produces objects of type *trellis*
+
+autoprinting takes care of printing a *trellis* object (creates the graph)
+
+# Lattice Behaviour
+
+```{r,cache=TRUE}
+p <- xyplot(Ozone ~ Wind, data = airquality) ## Nothing happens here!
+```
+
+Now we try to print it:
+
+```{r,cache=TRUE}
+print(p) ## Plot appears
+```
+
+Auto printing:
+```{r,cache=TRUE}
+xyplot(Ozone ~ Wind, data = airquality) ## Auto-printing
+```
+
+--------
+
+# Lattice Panel Functions
+
+```{r,cache=TRUE}
+set.seed(10)
+x <- rnorm(100)
+f <- rep(0:1, each = 50)
+y <- x + f - f * x  + rnorm(100, sd = 0.5)
+f <- factor(f, labels = c("Group 1", "Group 2"))
+xyplot(y ~ x | f, layout = c(2,1))  ## Plot with 2 panels
+```
+
+
+Custom Panel Function
+
+```{r,cache=TRUE}
+xyplot(y ~ x | f, panel = function(x,y,...) {
+  panel.xyplot(x,y,...) ## first call default panel function for 'xyplot'
+  panel.abline(h = median(y), lty = 2) ## add a horizontal dashed line at the median
+})
+```
+
+Regression Line
+
+```{r,cache=TRUE}
+xyplot(y ~ x | f, panel = function(x, y, ...) {
+  panel.xyplot(x, y, ...) ## first call default panel function for 'xyplot'
+  panel.lmline(x, y, col = 2) ## add a horizontal dashed line at the median
+})
+```
+
+--------
+
+# GGPLOT2 - part 1
+
+Grammar of Graphics
+
+Documentation at http://ggplot2.org
+
+##  The Basics: qplot()
+
+* Works similar to plot function in base graphics system.
+
+* Looks for data in a data frame, similar to lattice, or in the parent environment.
+
+* plots are made up of aesthetics (size, shape, color) and geoms (points, lines)
+
+* Factors are important because they indicate subsets of the data.
+
+* The qplot() hides what goes on underneath.
+
+* ggplot() is the core function and very flexible for doing things qplot() cannot do.
+
+--------
+
+# GGPLOT - part 2
+
+```{r,cache=TRUE}
+library(ggplot2)
+str(mpg)
+```
+
+### ggplot2 "Hello, world!"
+
+```{r,cache=TRUE}
+library(ggplot2)
+qplot(displ, hwy, data = mpg)
+```
+
+### Modifying the aesthetics
+
+```{r,cache=TRUE}
+library(ggplot2)
+qplot(displ, hwy, data = mpg, color = drv)
+```
+
+### Adding a geom - loess line
+
+```{r,cache=TRUE}
+library(ggplot2)
+qplot(displ, hwy, data = mpg, geom=c("point", "smooth"), method="loess")
+```
+
+### Histograms
+
+```{r,cache=TRUE}
+library(ggplot2)
+qplot(hwy, data = mpg, fill = drv)
+```
+
+### Facets
+
+```{r,cache=TRUE}
+library(ggplot2)
+qplot(displ, hwy, data = mpg, facets = . ~ drv)
+```
+
+```{r,cache=TRUE}
+library(ggplot2)
+qplot(hwy, data = mpg, facets = drv ~ ., binwidth = 2)
+```
+
+--------
+
+# The ggplot2 Plotting System - Part 2
+
+An implementation of the *Grammar of Graphics* by Leland Wilkinson
+
+## Basic components
+
+* A **data frame**
+* **aesthetic mappings**: how data are mapped to color, size, etc.
+* **geoms**: geometric objects like points, likes, shapes.
+* **facets**: for conditional plots.
+* **stats**: statistical transformations like binning, quantiles, smoothing.
+* **scales**: what scale an aesthetic map users (example: male = red, female = blue).
+* **coordinate system**
+
+--------
+
+## Building Plots with ggplot2
+
+* When building plots in ggplot2, the "artist's palette" model may be the closest analogy
+* Plots are built up in layers
+    + plot the data
+    + overlay a summary
+    + metadata and annotation
+
+--------
+
+# Quiz # 2
+
+## Question 7
+
+```{r,cache=TRUE}
+library(datasets)
+data(airquality)
+```
+
+```{r,cache=TRUE}
+airquality = transform(airquality, Month = factor(Month))
+qplot(Wind, Ozone, data = airquality, facets = . ~ Month)
+```

@@ -1,0 +1,70 @@
+---
+title: "Class Notes Week 3"
+author: "Reginald Carey"
+date: "March 14, 2015"
+output:
+  html_document: default
+---
+
+---
+
+##Communicating Results
+
+Hierarchy of information : Research Paper
+
+* Title / Author List
+* Abstract
+* Body / Results
+* Supplementary Materials / the gory details
+* Code / Data / really gory details
+
+---
+
+##Session info is handy for recording your environment
+
+```{r}
+sessionInfo()
+```
+
+---
+
+##Replication and Reproducability
+
+**Replication**
+
+* Focuses on the validity of the scientific claim
+* "Is this claim true?"
+* The ultimate statndard for strengthening scientific evidence
+* New investigators, data, analytical methods, laboratories, instruments, etc.
+* Particularly important in studies that can impact broad policy or regulatory decisions
+
+**Reproducability**
+
+* Focuses on the validity of the data analysis
+* "Can we trust this analysis?"
+* Arguably a minimum standard for any scientific study
+* New investigators, same data, same methods
+* Important when replication is impossible
+
+##What problem does Reproducability Solve?##
+
+**What we get**
+
+* Transparency
+* Data Availability
+* Software / Methods Availability
+* Improved Transfer of Knowledge
+
+**What we do NOT get**
+
+* Validity / Correctness of the analysis
+
+An analysis can be reproducible and still be wrong
+
+We want to know "can we trust this analysis?"
+
+Does requiring reproducibility deter bad analysis?
+
+##Introduction to Peer Assessment #2##
+
+http://www.rpubs.com/rdpeng/13396
