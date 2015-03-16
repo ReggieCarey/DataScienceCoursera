@@ -8,8 +8,9 @@
 .Rproj.user/
 .Rproj.user
 .httr-oauth
-
 *.zip
-
 Exploratory Data Analysis/ExData_Plotting1/
 Reproducible Research/RepData_PeerAssessment1/
+*.RData
+*.rdb
+*.rdx
