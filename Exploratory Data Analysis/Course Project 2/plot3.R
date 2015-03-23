@@ -36,10 +36,8 @@ if (!exists("SCC")) {
 #   for **Baltimore City**? Which have seen increases in emissions from 1999–2008? Use the
 #   **ggplot2** plotting system to make a plot answer this question.
 
-library(ggplot2)
-
-if (!exists("NEI_BaltSumByYear")) {
-    NEI_Baltimore <- subset(NEI, fips == 24510)
+if (!exists("NEI_BaltSumByTypeYear")) {
+    NEI_Baltimore <- subset(NEI, fips == "24510")
     NEI_BaltSumByTypeYear <- aggregate(NEI_Baltimore$Emissions,
                                        by = list(NEI_Baltimore$year,NEI_Baltimore$type),
                                        FUN = sum)
@@ -48,6 +46,9 @@ if (!exists("NEI_BaltSumByYear")) {
 
 # Write this plot to a file
 png("plot3.png", width = 480, height = 480)
+
+# Use GGPLOT2 Plotting System
+library(ggplot2)
 
 # Lets plot the data.
 print(
@@ -59,6 +60,6 @@ print(
           se=FALSE) +
         ggtitle("PM 2.5 for Baltimore City - Trends by Sensor Sources\nTotal Emissions per Year") +
         ylab("Total Emissions (tons)")
-    )
+)
 
 dev.off()

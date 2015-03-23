@@ -1,0 +1,206 @@
+---
+title: 'Analysis of historical NOAA Storm Data in support of resource prioritization in response to storm events in the United States.'
+author: "Reginald Carey"
+date: "March 22, 2015"
+output: html_document
+---
+
+## Synopsis ##
+In this paper we will be addressing two primary questions related to the analysis of storm data collected between 1950 and November 2011 by the United States National Oceanic and Atmospheric Administration (NOAA).  First, we want to determine what types of events are most harmful with respect to public health.  An analysis of the data as discussed in the Data Processing section and in the Results section will identify the parameters used to quantify public health.  Second, we want to determine which types of events have the greatest economic impact.  Again, an analysis of the data as discussed in the Data Processing section and the Results section will identify the specific parameters utilized to quantify economic impact.  This paper will not make any recommendations, however, it is intended to provide decision support to those individuals and organizations responsible for prioritizing resources in response to storm events.
+
+## Data Processing ##
+
+The storm data we will be utilizing comes from is a comma separated value file compressed via the bzip2 compression algorithn.  The data can be downloaded from [Storm Data](https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2) [47Mb], a course website.  This events in the database start in 1950 and end in November 2011.  Earlier year data is more sparse than later year data.  A theory for this is a lack of good records in earlier years - we will not be exploring that theory.
+
+We utilize documentation of the database available from [Storm Data Documentation](https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf) by the National Weather Service.  Additionally we utilize a Storm Events [FAQ](https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2FNCDC%20Storm%20Events-FAQ%20Page.pdf) provied by the National Climatic Data Center.
+
+### Data retrieval ###
+In support of reproducability, we identify our current R environment used to generate this report:
+```{r}
+sessionInfo()
+```
+
+We download the data from the cousre website
+```{r, cache=TRUE}
+download.file("https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2",
+              destfile = "repdata-data-StormData.csv.bz2",
+              method = "curl")
+```
+This should leave a file on the file system named ```repdata-data-StormData.csv.bz2```.
+
+Now we unzip the data and load into R memory in a variable ```StormData```.
+```{r, cache=TRUE}
+StormData <- read.csv(bzfile("repdata-data-StormData.csv.bz2"),
+                      strip.white = TRUE,
+                      stringsAsFactors = FALSE,
+                      na.strings = c("?",""),
+                      )
+```
+
+### Data Conversion, Subsetting and Cleanup ###
+
+Let's subset the data for the information that we're interested in namely EVTYPE, FATALITIES, INJURIES, PROPDMG, PROPDMGEXP, CROPDMG, CROPDMGEXP
+```{r,cache=TRUE}
+StormData <- subset(StormData, select = c(EVTYPE, FATALITIES, INJURIES, PROPDMG, PROPDMGEXP, CROPDMG, CROPDMGEXP))
+```
+
+Let's convert data strings to upper case so that factor analysis is more accurate
+```{r}
+StormData$EVTYPE = toupper(StormData$EVTYPE)
+StormData$PROPDMGEXP = toupper(StormData$PROPDMGEXP)
+StormData$CROPDMGEXP = toupper(StormData$CROPDMGEXP)
+```
+
+Let's setup factors for the data we're interested in.
+```{r,cache=TRUE}
+StormData$EVTYPE = factor(StormData$EVTYPE)
+StormData$PROPDMGEXP = factor(StormData$PROPDMGEXP)
+StormData$CROPDMGEXP = factor(StormData$CROPDMGEXP)
+```
+
+### Initial Data Analysis ###
+
+The ```FATALITIES``` and ```INJURIES``` fields will be utilized to capture data on population health.  We define "harmful to population health" as any event causing a fatality or an injury as reported in the provided data.
+
+What percentage of the events resulted in fatalities? injuries?
+```{r,cache=TRUE}
+numEvents <- nrow(StormData)
+Fatalities <- subset(StormData, FATALITIES > 0, na.rm=TRUE)
+numFatalityEvents <- nrow(Fatalities)
+Injuries <- subset(StormData, INJURIES > 0, na.rm=TRUE)
+numInjuryEvents <- nrow(Injuries)
+numFatalities <- sum(StormData$FATALITIES)
+numInjuries <- sum(StormData$INJURIES)
+
+# Subset the data to that which indicates harm to the population health
+HealthHarm <- subset(StormData, INJURIES > 0 | FATALITIES > 0, na.rm=TRUE)
+
+```
+
+```{r,cache=TRUE}
+sprintf("Number of events is %d", numEvents)
+sprintf("Number of events leading to fatalities is %d - %0.2f%%", numFatalityEvents, 100*numFatalityEvents/numEvents)
+sprintf("Number of events leading to injuries is %d - %0.2f%%", numInjuryEvents, 100*numInjuryEvents/numEvents)
+sprintf("Total number of fatalities in dataset %d", numFatalities)
+sprintf("Mean fatalities per event %0.2f%%", 100*numFatalities/numEvents)
+sprintf("Total number of injuries in dataset %d", numInjuries)
+sprintf("Mean injuries per event %0.2f%%", 100*numInjuries/numEvents)
+```
+
+
+We pull together the data and aggregate it by total number of injuries and fatalities by event type.  Then, lets compute a term HARM which is the sum of injuries and fatalities for a particular event type.
+```{r,cache=TRUE}
+agg <- aggregate(data = HealthHarm, cbind(INJURIES, FATALITIES)~EVTYPE, FUN = sum, na.rm=TRUE)
+agg$HARM <- agg$INJURIES + agg$FATALITIES
+```
+
+We now have a data set that can be used to identify the events that cause the most public harm.  Lets visualize the top 5 for injuries, fatalities and total harm.
+
+We now have enough information to answer the question:
+
+#### Across the United States, which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health? ####
+
+```{r,cache=TRUE}
+
+par(mfrow = c(3,1),mar=c(2,2,2,2))
+
+x <- head(agg[order(-agg$INJURIES),],5)
+x$EVTYPE = factor(as.character(x$EVTYPE))
+
+plot(log(x$INJURIES)~x$EVTYPE, main="Injuries", yaxt = "n")
+text(log(x$INJURIES)~x$EVTYPE, labels=sprintf("%d", x$INJURIES), pos = c(1,3,3,3,3))
+
+x <- head(agg[order(-agg$FATALITIES),],5)
+x$EVTYPE = factor(as.character(x$EVTYPE))
+
+plot(log(x$FATALITIES)~x$EVTYPE, main="Fatalities", yaxt = "n")
+text(log(x$FATALITIES)~x$EVTYPE, labels=sprintf("%d", x$FATALITIES), pos = c(1,3,3,3,3))
+
+x <- head(agg[order(-agg$HARM),],5)
+x$EVTYPE = factor(as.character(x$EVTYPE))
+
+plot(log(x$HARM)~x$EVTYPE, main="Public Harm", yaxt = "n")
+text(log(x$HARM)~x$EVTYPE, labels=sprintf("%d", x$HARM), pos = c(1,3,3,3,3))
+
+PublicHealthHarm <- x$EVTYPE[1]
+```
+
+As can be seen the event type that is most harmful to public health is `r PublicHealthHarm`
+
+---
+
+We now turn to Economic Consequences.  To compute Economic Consequences we look at both the CROP damage as well as PROPERTY damage.
+
+```{r,cache=TRUE}
+# Subset the data to that which indicates economic consequences
+
+EconomicConsequences <- subset(StormData, CROPDMG > 0 | PROPDMG > 0, na.rm=TRUE)
+```
+
+We now compute the combined CropDamage field which incorporates the CROPDMGEXP field
+```{r,cache=TRUE}
+EconomicConsequences$CropDamage <- ifelse(EconomicConsequences$CROPDMGEXP=="?", NA, EconomicConsequences$CROPDMG)
+EconomicConsequences$CropDamage <- ifelse(EconomicConsequences$CROPDMGEXP=="K", EconomicConsequences$CROPDMG*1000, EconomicConsequences$CROPDMG)
+EconomicConsequences$CropDamage <- ifelse(EconomicConsequences$CROPDMGEXP=="M", EconomicConsequences$CROPDMG*1000000, EconomicConsequences$CROPDMG)
+EconomicConsequences$CropDamage <- ifelse(EconomicConsequences$CROPDMGEXP=="B", EconomicConsequences$CROPDMG*1000000000, EconomicConsequences$CROPDMG)
+```
+
+We now compute the combined PropertyDamage field which incorporates the PROPDMGEXP field
+```{r,cache=TRUE}
+EconomicConsequences$PropertyDamage <- ifelse(EconomicConsequences$PROPDMGEXP=="?", NA, EconomicConsequences$PROPDMG)
+EconomicConsequences$PropertyDamage <- ifelse(EconomicConsequences$PROPDMGEXP=="K", EconomicConsequences$PROPDMG*1000, EconomicConsequences$PROPDMG)
+EconomicConsequences$PropertyDamage <- ifelse(EconomicConsequences$PROPDMGEXP=="M", EconomicConsequences$PROPDMG*1000000, EconomicConsequences$PROPDMG)
+EconomicConsequences$PropertyDamage <- ifelse(EconomicConsequences$PROPDMGEXP=="B", EconomicConsequences$PROPDMG*1000000000, EconomicConsequences$PROPDMG)
+```
+
+We pull together the data and aggregate it by tota by event type.  Then, lets compute a term EconomicConsequences which is the sum of Crop Damage and Property Damage costs by event type.
+
+```{r,cache=TRUE}
+
+agg <- aggregate(data = EconomicConsequences, cbind(CropDamage, PropertyDamage)~EVTYPE, FUN = sum, na.rm=TRUE)
+agg$EconomicConsequences <- agg$CropDamage + agg$PropertyDamage
+```
+
+We now have enough information to answer the question:
+
+#### Across the United States, which types of events have the greatest economic consequences? ####
+
+```{r,cache=TRUE}
+
+par(mfrow = c(3,1),mar=c(2,2,2,2))
+
+x <- head(agg[order(-agg$CropDamage),],5)
+x$EVTYPE = factor(as.character(x$EVTYPE))
+
+plot(log(x$CropDamage)~x$EVTYPE, main="Crop Damage", yaxt = "n")
+text(log(x$CropDamage)~x$EVTYPE, labels=sprintf("$%0.2f", x$CropDamage), pos = c(1,1,3,3,3))
+
+x <- head(agg[order(-agg$PropertyDamage),],5)
+x$EVTYPE = factor(as.character(x$EVTYPE))
+
+plot(log(x$PropertyDamage)~x$EVTYPE, main="Property Damage", yaxt = "n")
+text(log(x$PropertyDamage)~x$EVTYPE, labels=sprintf("$%0.2f", x$PropertyDamage), pos = c(1,3,3,3,3))
+
+x <- head(agg[order(-agg$EconomicConsequences),],5)
+x$EVTYPE = factor(as.character(x$EVTYPE))
+
+plot(log(x$EconomicConsequences)~x$EVTYPE, main="Economic Consequences", yaxt = "n")
+text(log(x$EconomicConsequences)~x$EVTYPE, labels=sprintf("$%0.2f", x$EconomicConsequences), pos = c(1,3,3,3,3))
+
+EconomicDamage <- x$EVTYPE[1]
+```
+
+As can be seen the event type that has the greatest Economic Consequences is `r EconomicDamage`
+
+
+## Results ##
+
+The results of our analysis indicate that `r PublicHealthHarm` is the event type which causes greatest harm to the population health.
+
+The results of our analysis indicate that `r EconomicDamage` is the event type which causes greatest economic consequences.
+
+These results where obtained by the methods outlined above based on data collected from the NOAA Storm Database with data from 1950 through November 2011.
+
+### Potential sources of error in the results ###
+Data in the EVTYPE field is a bit dirty.  Data is missing and not well understood (EXP field for CROPDMG and PROPDMG contain types not well understood and are largely ignored).  When attempting to compute means and sums, instead of imputing data, we simply ignore NA data. We attempted to clean some of it up during data ingestion (trimming of whitespace,forced capitalization) but there are values in the EVTYPE field with slight misspellings or changes in punctuation.  The variety of changes needed to clean the data completely involves an event type by event type analysis. This researcher felt that such an effort would be beyond the scope of this exercise.
+
