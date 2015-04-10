@@ -1,0 +1,45 @@
+---
+title: "Classroom Notes"
+author: "Reginald Carey"
+date: "April 7, 2015"
+output: html_document
+---
+
+```{r}
+library(UsingR)
+data(galton)
+hist(galton$child, col="blue", breaks=100)
+hist(galton$parent, col="blue", breaks=100)
+```
+
+```{r,eval=FALSE}
+library(manipulate)
+myHist <- function(mu) {
+    hist(galton$child, col="blue", breaks=100)
+    lines(c(mu,mu), c(0,150), col="red", lwd=5)
+    mse <- mean((galton$child - mu)^2)
+    text(63,150, paste("mu = ", mu))
+    text(63,140, paste("MSE = ", round(mse, 2)))
+}
+manipulate(myHist(mu), mu = slider(62,74, step=0.5))
+```
+
+---
+
+```{r lsm, dependson="galton", fig.height=4, fig.width=4}
+hist(galton$child,col="blue",breaks=100)
+meanChild <- mean(galton$child)
+lines(rep(meanChild,100),seq(0,150,length=100), col="red", lwd=5)
+```
+
+Comparing childrens' hights and their parents' heights
+
+
+```{r}
+plot(galton$parent, galton$child, pch=19, col="blue")
+```
+
+
+
+
+
